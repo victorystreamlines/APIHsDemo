@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management System - Genetic Invent</title>
+    <title>User Management System</title>
     <style>
         * {
             margin: 0;
@@ -172,382 +172,6 @@
             font-size: 18px;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 15px;
-            width: 80%;
-            max-width: 800px;
-            max-height: 80vh;
-            overflow-y: auto;
-            animation: slideInDown 0.5s ease;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close:hover {
-            color: #000;
-        }
-
-        .tooltip {
-            position: absolute;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 16px 20px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-family: 'Courier New', monospace;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: auto;
-            transition: all 0.3s ease;
-            max-width: 600px;
-            max-height: 400px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
-            line-height: 1.4;
-            cursor: text;
-            user-select: text;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .tooltip.show {
-            opacity: 1;
-            animation: tooltipSlideIn 0.3s ease;
-        }
-
-        .tooltip:hover {
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 20px rgba(102, 126, 234, 0.3);
-        }
-
-        @keyframes tooltipSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .tooltip-close {
-            position: absolute;
-            top: 8px;
-            right: 12px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            font-size: 18px;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .tooltip-close:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(90deg);
-        }
-
-        .tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -8px;
-            border-width: 8px;
-            border-style: solid;
-            border-color: #667eea transparent transparent transparent;
-        }
-
-        .info-panel {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .info-panel-button {
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .info-panel-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(72, 187, 120, 0.4);
-            background: linear-gradient(135deg, #4fd982 0%, #3dd974 100%);
-        }
-
-        .info-panel-button:active {
-            transform: translateY(-2px);
-        }
-
-        .click-hint {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-top: 10px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
-        }
-
-        .project-details-modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .project-details-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 1000px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
-            animation: slideInUp 0.5s ease;
-        }
-
-        .project-details-header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-            padding-bottom: 20px;
-        }
-
-        .project-details-header h1 {
-            font-size: 2.5em;
-            margin: 0;
-            background: linear-gradient(45deg, #fff, #f0f8ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .detail-section {
-            margin: 30px 0;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            border-left: 5px solid #48bb78;
-            backdrop-filter: blur(10px);
-        }
-
-        .detail-section h3 {
-            color: #48bb78;
-            font-size: 1.4em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .tech-card {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .tech-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .tech-icon {
-            font-size: 3em;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .benefits-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .benefit-item {
-            background: rgba(72, 187, 120, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #48bb78;
-        }
-
-        .close-details {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            font-size: 24px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .close-details:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(90deg);
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -30%) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-
-        .demo-flow {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            margin: 20px 0;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .flow-step {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            min-width: 120px;
-            position: relative;
-        }
-
-        .flow-step::after {
-            content: '→';
-            position: absolute;
-            right: -25px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-            color: #48bb78;
-        }
-
-        .flow-step:last-child::after {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .project-details-content {
-                width: 95%;
-                padding: 20px;
-            }
-            
-            .project-details-header h1 {
-                font-size: 2em;
-            }
-            
-            .tech-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .demo-flow {
-                flex-direction: column;
-            }
-            
-            .flow-step::after {
-                display: none;
-            }
-        }
-
-        .api-source-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .api-source-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.6);
-        }
-
-        pre {
-            background: #2d3748;
-            color: #e2e8f0;
-            padding: 20px;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -581,22 +205,6 @@
             }
         }
 
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -623,212 +231,318 @@
             background: #c6f6d5;
             color: #22543d;
             border: 1px solid #9ae6b4;
-        }
-
-        .status-error {
+        }        .status-error {
             background: #fed7d7;
             color: #742a2a;
             border: 1px solid #fc8181;
+        }
+
+        /* Search Functionality Styles */
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .search-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-header::before {
+            content: "🔍";
+            font-size: 1.2em;
+        }
+
+        .search-input-container {
+            position: relative;
+            padding: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 20px;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus + .search-icon {
+            color: #764ba2;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .search-stats {
+            padding: 0 20px 15px 20px;
+            color: #666;
+            font-size: 14px;
+            display: none;
+        }
+
+        .search-results {
+            max-height: 400px;
+            overflow-y: auto;
+            border-top: 1px solid #e2e8f0;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-result-item:hover {
+            background: linear-gradient(90deg, #f8fafc 0%, #e2e8f0 100%);
+            transform: translateX(5px);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-info {
+            flex: 1;
+        }
+
+        .search-result-name {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .search-result-details {
+            color: #718096;
+            font-size: 14px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .search-result-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .search-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn-edit {
+            background: #667eea;
+            color: white;
+        }
+
+        .search-btn-edit:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .search-btn-delete {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .search-btn-delete:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+        }
+
+        .search-loading {
+            padding: 20px;
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+            display: none;
+        }
+
+        .search-no-results {
+            padding: 30px 20px;
+            text-align: center;
+            color: #718096;
+            display: none;
+        }
+
+        .search-no-results::before {
+            content: "📭";
+            display: block;
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #fef5e7 0%, #f6e05e 100%);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .search-shortcut {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+        }        /* Animation for search results */
+        @keyframes fadeInSearchResult {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .search-result-item {
+            animation: fadeInSearchResult 0.3s ease-out;
+        }
+
+        /* Responsive search */
+        @media (max-width: 768px) {
+            .search-result-details {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .search-result-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🧬 User Management System</h1>
-            <p class="subtitle">Demo project connecting GitHub Pages with PHP Backend on Hostinger</p>
+            <h1>User Management System</h1>
+            <p class="subtitle">Manage users with CRUD operations</p>
         </header>
-
-        <button class="info-panel info-panel-button" onclick="showProjectDetails()" 
-                data-tooltip="Click to open detailed project explanation">
-            <h3>🎯 Project Goal</h3>
-            <p>This project demonstrates how to connect a frontend hosted on GitHub Pages with a PHP backend hosted on Hostinger</p>
-            <p>Employees can learn CRUD operations and API communication methods</p>
-            <div class="click-hint">✨ Click for detailed explanation ✨</div>
-        </button>
 
         <div class="main-content">
             <div class="form-card">
-                <h2 data-tooltip="Data input form - uses JavaScript for data validation before submission">📝 Add/Edit User</h2>
+                <h2>Add/Edit User</h2>
                 
                 <div class="status-message" id="statusMessage"></div>
                 
-                <form id="userForm" data-tooltip="HTML form that uses fetch() API to send data to backend">
-                    <input type="hidden" id="userId" data-tooltip="Hidden field to store user ID during editing">
+                <form id="userForm">
+                    <input type="hidden" id="userId">
                     
                     <div class="form-group">
-                        <label for="userName" data-tooltip="Field label - linked to field via for attribute">Name:</label>
-                        <input type="text" id="userName" required 
-                               data-tooltip="Text input field with required validation - sends value via POST to api.php">
+                        <label for="userName">Name:</label>
+                        <input type="text" id="userName" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="userEmail" data-tooltip="Email field label">Email:</label>
-                        <input type="email" id="userEmail" required 
-                               data-tooltip="Email field with automatic validation - uses HTML5 validation">
+                        <label for="userEmail">Email:</label>
+                        <input type="email" id="userEmail" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="userPhone" data-tooltip="Phone number field label">Phone:</label>
-                        <input type="tel" id="userPhone" required 
-                               data-tooltip="Phone field - can add validation pattern using pattern attribute">
+                        <label for="userPhone">Phone:</label>
+                        <input type="tel" id="userPhone" required>
                     </div>
                     
-                    <button type="submit" class="btn" id="submitBtn" 
-                            data-tooltip="Submit button executes form submit event:
-
-userForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const formData = new FormData();
-    const id = document.getElementById('userId').value;
-    
-    if (id) {
-        formData.append('action', 'update');
-        formData.append('id', id);
-    } else {
-        formData.append('action', 'create');
-    }
-    
-    formData.append('name', document.getElementById('userName').value);
-    formData.append('email', document.getElementById('userEmail').value);
-    formData.append('phone', document.getElementById('userPhone').value);
-
-    try {
-        showLoading(true);
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            body: formData
-        });
-        
-        const result = await response.json();
-        if (result.success) {
-            showMessage(result.message, 'success');
-            userForm.reset();
-            loadUsers();
-        } else {
-            showMessage(result.message, 'error');
-        }
-    } catch (error) {
-        showMessage('Server connection error', 'error');
-    } finally {
-        showLoading(false);
-    }
-});">
-                        💾 Save User
-                    </button>
+                    <button type="submit" class="btn" id="submitBtn">Save User</button>
                     
-                    <button type="button" class="btn btn-secondary" id="cancelBtn" style="display:none;" 
-                            data-tooltip="Cancel button executes:
-
-document.getElementById('cancelBtn').addEventListener('click', function() {
-    userForm.reset();
-    document.getElementById('userId').value = '';
-    document.getElementById('submitBtn').textContent = '💾 Save User';
-    this.style.display = 'none';
-});">
-                        ❌ Cancel
-                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancelBtn" style="display:none;">Cancel</button>
                 </form>
-            </div>
-
-            <div class="users-card">
-                <h2 data-tooltip="Users list - updates automatically via loadUsers() function">👥 Users List</h2>
+            </div>            <div class="users-card">
+                <h2>Users List</h2>
                 
-                <button class="btn" onclick="loadUsers()" 
-                        data-tooltip="Refresh button executes loadUsers() function:
-
-async function loadUsers() {
-    try {
-        showLoading(true);
-        
-        // Try HTTPS first, then HTTP if needed
-        let response = await fetch(API_URL);
-        if (!response.ok && API_URL.startsWith('https://')) {
-            const httpUrl = API_URL.replace('https://', 'http://');
-            response = await fetch(httpUrl);
-        }
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            displayUsers(result.data);
-        } else {
-            showMessage(result.message, 'error');
-            displayUsers(demoUsers);
-        }
-    } catch (error) {
-        console.error('Error loading users:', error);
-        showMessage('Server connection error. Showing demo data...', 'error');
-        displayUsers(demoUsers);
-    } finally {
-        showLoading(false);
-    }
-}">
-                    🔄 Refresh List
-                </button>
+                <!-- Advanced Search Feature -->
+                <div class="search-container">
+                    <div class="search-header">
+                        Live Search Users
+                        <div class="search-shortcut">Ctrl + K</div>
+                    </div>                    <div class="search-input-container">
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            placeholder="Search by name, email, or phone number..." 
+                            id="searchInput"
+                            autocomplete="off"
+                        >
+                        <div class="search-icon">🔍</div>
+                    </div>
+                    <div class="search-stats" id="searchStats"></div>
+                    <div class="search-loading" id="searchLoading">
+                        <div style="display: inline-block; animation: spin 1s linear infinite;">⏳</div>
+                        Searching...
+                    </div>
+                    <div class="search-results" id="searchResults"></div>
+                    <div class="search-no-results" id="searchNoResults">
+                        <strong>No users found</strong>
+                        <div style="margin-top: 10px; font-size: 14px;">
+                            Try different keywords or check your spelling
+                        </div>
+                    </div>
+                </div>
                 
-                <button class="btn btn-secondary" onclick="testApiConnection()" 
-                        data-tooltip="Test API button executes testApiConnection() function:
-
-async function testApiConnection() {
-    showMessage('🔍 Testing API connection...', 'success');
-    
-    const urls = [
-        'https://glconnectionbuilder1.com/api.php?action=test_connection',
-        'http://glconnectionbuilder1.com/api.php?action=test_connection'
-    ];
-    
-    for (const url of urls) {
-        const success = await tryConnection(url);
-        if (success) {
-            loadUsers();
-            return;
-        }
-    }
-    
-    showMessage('❌ All connection attempts failed. Check console for details.', 'error');
-}
-
-async function tryConnection(url) {
-    try {
-        console.log(`Trying connection to: ${url}`);
-        const response = await fetch(url);
-        console.log(`Response status: ${response.status}`);
-        
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Response:', result);
-            showMessage(`✅ API Connected via ${url}! Status: ${result.message || 'OK'}`, 'success');
-            
-            window.API_URL = url;
-            return true;
-        } else {
-            console.error(`Failed with status: ${response.status}`);
-            showMessage(`❌ ${url} returned HTTP ${response.status}`, 'error');
-            return false;
-        }
-    } catch (error) {
-        console.error(`Connection to ${url} failed:`, error);
-        showMessage(`❌ ${url} failed: ${error.message}`, 'error');
-        return false;
-    }
-}">
-                    🔍 Test API
-                </button>
+                <button class="btn" onclick="loadUsers()">Refresh List</button>
                 
-                <div class="loading" id="loading">⏳ Loading...</div>
+                <div class="loading" id="loading">Loading...</div>
                 
-                <table class="users-table" id="usersTable" 
-                       data-tooltip="HTML table for displaying data - filled dynamically from JSON response">
+                <table class="users-table" id="usersTable">
                     <thead>
                         <tr>
-                            <th data-tooltip="ID column - primary key from database">ID</th>
-                            <th data-tooltip="Name column - VARCHAR(100) in database">Name</th>
-                            <th data-tooltip="Email column - VARCHAR(100) with indexing">Email</th>
-                            <th data-tooltip="Phone column - VARCHAR(20) in database">Phone</th>
-                            <th data-tooltip="Creation date column - DATETIME with default CURRENT_TIMESTAMP">Created At</th>
-                            <th data-tooltip="Actions column - edit and delete buttons for each row">Actions</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="usersTableBody">
@@ -837,383 +551,277 @@ async function tryConnection(url) {
                 </table>
             </div>
         </div>
-    </div>
-
-    <!-- Source Code Buttons -->
-    <button class="api-source-btn" onclick="showApiSource()" 
-            data-tooltip="View API Code button executes showApiSource() function:
-
-function showApiSource() {
-    document.getElementById('apiSourceCode').textContent = API_SOURCE_CODE;
-    document.getElementById('apiModal').style.display = 'block';
-}">
-        📄 View API Code
-    </button>
-    
-    <button class="api-source-btn" onclick="showHtmlSource()" 
-            style="bottom: 80px;"
-            data-tooltip="View HTML Code button executes showHtmlSource() function:
-
-function showHtmlSource() {
-    const htmlSource = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-    document.getElementById('htmlSourceCode').textContent = htmlSource;
-    document.getElementById('htmlModal').style.display = 'block';
-}">
-        🌐 View HTML Code
-    </button>
-
-    <!-- API Source Modal -->
-    <div id="apiModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeApiModal()">&times;</span>
-            <h2>🔧 api.php Code - Backend</h2>
-            <p><strong>This code runs on Hostinger server and handles MySQL database</strong></p>
-            <pre id="apiSourceCode">Loading...</pre>
-        </div>
-    </div>
-
-    <!-- HTML Source Modal -->
-    <div id="htmlModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeHtmlModal()">&times;</span>
-            <h2>🌐 index.html Code - Frontend</h2>
-            <p><strong>This HTML file contains the complete frontend with CSS and JavaScript</strong></p>
-            <pre id="htmlSourceCode">Loading...</pre>
-        </div>
-    </div>
-
-    <!-- Project Details Modal -->
-    <div id="projectDetailsModal" class="project-details-modal">
-        <div class="project-details-content">
-            <button class="close-details" onclick="closeProjectDetails()">&times;</button>
-            
-            <div class="project-details-header">
-                <h1>🧬 Genetic Invent - Full Stack Demo</h1>
-                <p style="font-size: 1.2em; opacity: 0.9;">Comprehensive Educational Platform for Modern Web Technologies</p>
-            </div>
-
-            <div class="detail-section">
-                <h3>🎯 Project Philosophy & Core Objectives</h3>
-                <p>This project has been designed to be an <strong>interactive educational platform</strong> for Genetic Invent employees to understand how modern web applications work from A to Z. The goal is not just to create a user management system, but to create a <strong>comprehensive learning experience</strong> that covers:</p>
-                
-                <div class="benefits-list">
-                    <div class="benefit-item">
-                        <strong>🔗 Frontend-Backend Communication:</strong> Understanding how GitHub Pages communicates with Hostinger servers
-                    </div>
-                    <div class="benefit-item">
-                        <strong>💾 CRUD Operations:</strong> Learning Create, Read, Update, Delete in a real environment
-                    </div>
-                    <div class="benefit-item">
-                        <strong>🔒 API Security:</strong> Understanding CORS, validation, and error handling
-                    </div>
-                    <div class="benefit-item">
-                        <strong>🎨 UI/UX Design:</strong> Applying modern design principles and interaction
-                    </div>
-                </div>
-            </div>
-
-            <div class="detail-section">
-                <h3>⚡ Technologies Used & Infrastructure</h3>
-                <div class="tech-grid">
-                    <div class="tech-card">
-                        <span class="tech-icon">🌐</span>
-                        <h4>Frontend - GitHub Pages</h4>
-                        <p>HTML5, CSS3, Vanilla JavaScript<br>
-                        <small>Responsive design with advanced animations</small></p>
-                    </div>
-                    <div class="tech-card">
-                        <span class="tech-icon">🔧</span>
-                        <h4>Backend - Hostinger PHP</h4>
-                        <p>PHP 8+, MySQL Database<br>
-                        <small>RESTful API with comprehensive error handling</small></p>
-                    </div>
-                    <div class="tech-card">
-                        <span class="tech-icon">🗄️</span>
-                        <h4>Database - MySQL</h4>
-                        <p>Structured data storage<br>
-                        <small>Auto-increment IDs, timestamps, indexing</small></p>
-                    </div>
-                    <div class="tech-card">
-                        <span class="tech-icon">🔒</span>
-                        <h4>Security - CORS & Validation</h4>
-                        <p>Cross-origin resource sharing<br>
-                        <small>Input validation and prepared statements</small></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="detail-section">
-                <h3>🔄 How the System Works - Data Flow</h3>
-                <p>Understanding the data flow step by step:</p>
-                
-                <div class="demo-flow">
-                    <div class="flow-step">
-                        <strong>1️⃣ User Input</strong><br>
-                        <small>Forms & Buttons</small>
-                    </div>
-                    <div class="flow-step">
-                        <strong>2️⃣ JavaScript</strong><br>
-                        <small>Event Handling</small>
-                    </div>
-                    <div class="flow-step">
-                        <strong>3️⃣ Fetch API</strong><br>
-                        <small>HTTP Requests</small>
-                    </div>
-                    <div class="flow-step">
-                        <strong>4️⃣ PHP Backend</strong><br>
-                        <small>Server Processing</small>
-                    </div>
-                    <div class="flow-step">
-                        <strong>5️⃣ MySQL</strong><br>
-                        <small>Data Storage</small>
-                    </div>
-                    <div class="flow-step">
-                        <strong>6️⃣ JSON Response</strong><br>
-                        <small>Data Return</small>
-                    </div>
-                    <div class="flow-step">
-                        <strong>7️⃣ UI Update</strong><br>
-                        <small>Dynamic Display</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="detail-section">
-                <h3>🚀 Advanced Educational Features</h3>
-                <p>This application is designed to be a <strong>superior educational tool</strong> with special features:</p>
-                
-                <div class="benefits-list">
-                    <div class="benefit-item">
-                        <strong>💬 Interactive Tooltips:</strong> Every element contains detailed explanation of its related code
-                    </div>
-                    <div class="benefit-item">
-                        <strong>📋 Source Code Display:</strong> Buttons to view complete PHP and HTML code
-                    </div>
-                    <div class="benefit-item">
-                        <strong>🔍 Connection Testing:</strong> Debugging tools to understand network issues
-                    </div>
-                    <div class="benefit-item">
-                        <strong>📊 Demo Data:</strong> Fallback data when server is unavailable
-                    </div>
-                    <div class="benefit-item">
-                        <strong>⚡ Real-time Feedback:</strong> Instant messages for every operation
-                    </div>
-                    <div class="benefit-item">
-                        <strong>🎨 Animations & Transitions:</strong> Smooth and attractive user experience
-                    </div>
-                </div>
-            </div>
-
-            <div class="detail-section">
-                <h3>🎓 Educational Benefits for Employees</h3>
-                <div class="benefits-list">
-                    <div class="benefit-item">
-                        <strong>Backend Development Understanding:</strong> How to create APIs and manage databases
-                    </div>
-                    <div class="benefit-item">
-                        <strong>Advanced Frontend Learning:</strong> JavaScript ES6+, Fetch API, DOM manipulation
-                    </div>
-                    <div class="benefit-item">
-                        <strong>DevOps Concepts:</strong> Deployment on different hosting providers
-                    </div>
-                    <div class="benefit-item">
-                        <strong>Security Best Practices:</strong> Understanding CORS, validation, and SQL injection prevention
-                    </div>
-                    <div class="benefit-item">
-                        <strong>Debugging Skills:</strong> How to diagnose network issues and errors
-                    </div>
-                    <div class="benefit-item">
-                        <strong>Modern Web Standards:</strong> Responsive design, accessibility, performance
-                    </div>
-                </div>
-            </div>
-
-            <div class="detail-section">
-                <h3>🛠️ Technical Challenges Solved</h3>
-                <p>The project demonstrates solutions to real-world web development problems:</p>
-                <ul style="line-height: 2;">
-                    <li><strong>CORS Issues:</strong> Solved Cross-Origin problems between GitHub Pages and Hostinger</li>
-                    <li><strong>HTTPS/HTTP Fallback:</strong> Automatic switching between protocols</li>
-                    <li><strong>Error Handling:</strong> Comprehensive error handling with clear messages</li>
-                    <li><strong>Database Auto-Setup:</strong> Automatic table creation on first use</li>
-                    <li><strong>Input Validation:</strong> Data validation on both Frontend and Backend</li>
-                    <li><strong>Responsive Design:</strong> Works on all devices and screen sizes</li>
-                </ul>
-            </div>
-
-            <div class="detail-section">
-                <h3>🎯 Practical Applications & Uses</h3>
-                <p>This project can be used as:</p>
-                <div class="benefits-list">
-                    <div class="benefit-item">
-                        <strong>🏫 Training Material:</strong> Workshops for modern web development
-                    </div>
-                    <div class="benefit-item">
-                        <strong>📚 Technical Reference:</strong> Template for future projects
-                    </div>
-                    <div class="benefit-item">
-                        <strong>🧪 Testing Environment:</strong> Testing ground for new technologies
-                    </div>
-                    <div class="benefit-item">
-                        <strong>💼 Portfolio Piece:</strong> Showcasing technical skills to clients
-                    </div>
-                </div>
-            </div>
-
-            <div class="detail-section">
-                <h3>🚀 Future Development Steps</h3>
-                <p>Project expansion possibilities:</p>
-                <ul style="line-height: 2;">
-                    <li><strong>Authentication System:</strong> Adding login/logout and user roles</li>
-                    <li><strong>Advanced CRUD:</strong> Search, pagination, sorting, filtering</li>
-                    <li><strong>File Upload:</strong> Image and file management</li>
-                    <li><strong>Real-time Updates:</strong> WebSocket or Server-Sent Events</li>
-                    <li><strong>Mobile App:</strong> React Native or Flutter version</li>
-                    <li><strong>API Documentation:</strong> Swagger/OpenAPI integration</li>
-                </ul>
-            </div>
-
-            <div style="text-align: center; margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 15px;">
-                <h3 style="color: #48bb78;">🎉 Enjoy Learning and Exploring!</h3>
-                <p>This project was created with love and precision to serve the exceptional Genetic Invent team</p>
-                <p style="font-size: 0.9em; opacity: 0.8;">Use the tooltips, check out the code, try all the buttons!</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tooltip element -->
-    <div class="tooltip" id="tooltip"></div>
-
-    <script>
-        // API Configuration - try HTTPS first, fallback to HTTP
-        const API_URL = 'https://glconnectionbuilder1.com/api.php'; // Hostinger domain with HTTPS
+    </div>    <script>
+        // API Configuration
+        const API_URL = 'https://glconnectionbuilder1.com/api.php';
         
         // DOM elements
         const userForm = document.getElementById('userForm');
         const usersTableBody = document.getElementById('usersTableBody');
         const loading = document.getElementById('loading');
         const statusMessage = document.getElementById('statusMessage');
-        const tooltip = document.getElementById('tooltip');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const searchLoading = document.getElementById('searchLoading');
+        const searchStats = document.getElementById('searchStats');
+        const searchNoResults = document.getElementById('searchNoResults');
 
-        // Tooltip functionality with improved hover behavior
-        let tooltipTimer = null;
-        let currentTooltipElement = null;
+        // Search functionality
+        let searchTimeout = null;
+        let currentSearchQuery = '';
 
-        function showTooltip(element) {
-            const tooltipText = element.getAttribute('data-tooltip');
+        // Initialize search functionality
+        function initializeSearch() {
+            searchInput.addEventListener('input', handleSearchInput);
+            searchInput.addEventListener('keydown', handleSearchKeydown);
             
-            if (tooltipText) {
-                currentTooltipElement = element;
+            // Global keyboard shortcut (Ctrl + K)
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'k') {
+                    e.preventDefault();
+                    searchInput.focus();
+                    searchInput.select();
+                }
+            });
+        }
+
+        // Handle search input with debouncing
+        function handleSearchInput(e) {
+            const query = e.target.value.trim();
+            
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+            
+            if (query.length < 2) {
+                hideSearchResults();
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        }
+
+        // Handle keyboard navigation in search
+        function handleSearchKeydown(e) {
+            if (e.key === 'Escape') {
+                hideSearchResults();
+                searchInput.blur();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (searchInput.value.trim().length >= 2) {
+                    performSearch(searchInput.value.trim());
+                }
+            }
+        }
+
+        // Perform the actual search
+        async function performSearch(query) {
+            if (query === currentSearchQuery) return;
+            
+            currentSearchQuery = query;
+            showSearchLoading(true);
+            
+            try {
+                let response;
+                try {
+                    response = await fetch(`${API_URL}?action=search&q=${encodeURIComponent(query)}`);
+                } catch (httpsError) {
+                    console.log('HTTPS failed, trying HTTP...');
+                    const httpUrl = API_URL.replace('https://', 'http://');
+                    response = await fetch(`${httpUrl}?action=search&q=${encodeURIComponent(query)}`);
+                }
                 
-                // Create tooltip content with close button
-                tooltip.innerHTML = `
-                    <span class="tooltip-close" onclick="forceHideTooltip()">&times;</span>
-                    ${tooltipText}
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                console.log('Search API Response:', result);
+                
+                if (result.success) {
+                    const users = result.data?.users || result.users || [];
+                    const totalMatches = result.data?.total_matches || result.total_matches || users.length;
+                    displaySearchResults(users, query, totalMatches);
+                } else {
+                    showSearchError(result.message || 'Search failed');
+                }
+            } catch (error) {
+                console.error('Search error details:', error);
+                // Try alternative approach - use the regular read endpoint with search parameter
+                try {
+                    console.log('Trying fallback search method...');
+                    let fallbackResponse;
+                    try {
+                        fallbackResponse = await fetch(`${API_URL}?action=read&search=${encodeURIComponent(query)}`);
+                    } catch (httpsError) {
+                        const httpUrl = API_URL.replace('https://', 'http://');
+                        fallbackResponse = await fetch(`${httpUrl}?action=read&search=${encodeURIComponent(query)}`);
+                    }
+                    
+                    if (fallbackResponse.ok) {
+                        const fallbackResult = await fallbackResponse.json();
+                        console.log('Fallback search result:', fallbackResult);
+                        
+                        if (fallbackResult.success) {
+                            const users = fallbackResult.data?.users || fallbackResult.users || [];
+                            const filteredUsers = users.filter(user => 
+                                user.name.toLowerCase().includes(query.toLowerCase()) ||
+                                user.email.toLowerCase().includes(query.toLowerCase()) ||
+                                user.phone.toLowerCase().includes(query.toLowerCase())
+                            );
+                            displaySearchResults(filteredUsers, query, filteredUsers.length);
+                            return;
+                        }
+                    }
+                } catch (fallbackError) {
+                    console.error('Fallback search also failed:', fallbackError);
+                }
+                
+                showSearchError(`Connection failed: ${error.message}. Please check your internet connection.`);
+            } finally {
+                showSearchLoading(false);
+            }
+        }
+
+        // Display search results
+        function displaySearchResults(users, query, totalMatches) {
+            searchResults.innerHTML = '';
+            
+            if (!users || users.length === 0) {
+                showSearchNoResults(true);
+                showSearchStats(false);
+                return;
+            }
+            
+            showSearchNoResults(false);
+            showSearchStats(true, users.length, totalMatches, query);
+            
+            users.forEach((user, index) => {
+                const resultItem = createSearchResultItem(user, query, index);
+                searchResults.appendChild(resultItem);
+            });
+            
+            searchResults.style.display = 'block';
+        }
+
+        // Create individual search result item
+        function createSearchResultItem(user, query, index) {
+            const item = document.createElement('div');
+            item.className = 'search-result-item';
+            item.style.animationDelay = `${index * 0.05}s`;
+            
+            const highlightedName = highlightText(user.name, query);
+            const highlightedEmail = highlightText(user.email, query);
+            const highlightedPhone = highlightText(user.phone, query);
+            
+            item.innerHTML = `
+                <div class="search-result-info">
+                    <div class="search-result-name">${highlightedName}</div>
+                    <div class="search-result-details">
+                        <span>📧 ${highlightedEmail}</span>
+                        <span>📱 ${highlightedPhone}</span>
+                        <span>📅 ${user.created_at}</span>
+                    </div>
+                </div>
+                <div class="search-result-actions">
+                    <button class="search-btn search-btn-edit" data-action="edit-search" data-id="${user.id}" data-name="${escapeHtml(user.name)}" data-email="${escapeHtml(user.email)}" data-phone="${escapeHtml(user.phone)}">
+                        ✏️ Edit
+                    </button>
+                    <button class="search-btn search-btn-delete" data-action="delete-search" data-id="${user.id}" data-name="${escapeHtml(user.name)}">
+                        🗑️ Delete
+                    </button>
+                </div>
+            `;
+            
+            return item;
+        }
+
+        // Highlight matching text in search results
+        function highlightText(text, query) {
+            if (!query || !text) return text;
+            
+            const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        // Escape HTML for security
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Escape special regex characters
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Edit user from search results
+        function editUserFromSearch(id, name, email, phone) {
+            editUser(id, name, email, phone);
+            hideSearchResults();
+            searchInput.value = '';
+            currentSearchQuery = '';
+        }
+
+        // Delete user from search results
+        async function deleteUserFromSearch(id, name) {
+            const success = await deleteUser(id, name);
+            if (success) {
+                if (currentSearchQuery) {
+                    performSearch(currentSearchQuery);
+                }
+            }
+        }
+
+        // Show/hide search loading
+        function showSearchLoading(show) {
+            searchLoading.style.display = show ? 'block' : 'none';
+            if (show) {
+                searchResults.style.display = 'none';
+                searchNoResults.style.display = 'none';
+            }
+        }
+
+        // Show/hide search statistics
+        function showSearchStats(show, showing = 0, total = 0, query = '') {
+            if (show) {
+                searchStats.innerHTML = `
+                    <strong>Search Results:</strong> Showing ${showing} of ${total} matches for "${query}"
+                    ${total > showing ? ` (showing top ${showing} results)` : ''}
                 `;
-                tooltip.classList.add('show');
-                
-                // Position tooltip
-                const rect = element.getBoundingClientRect();
-                let left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2);
-                let top = rect.top - tooltip.offsetHeight - 10;
-                
-                // Ensure tooltip stays within screen bounds
-                if (left < 10) {
-                    left = 10;
-                }
-                if (left + tooltip.offsetWidth > window.innerWidth - 10) {
-                    left = window.innerWidth - tooltip.offsetWidth - 10;
-                }
-                
-                // If tooltip would appear above screen, show it below
-                if (top < 10) {
-                    top = rect.bottom + 10;
-                }
-                
-                tooltip.style.left = left + 'px';
-                tooltip.style.top = top + 'px';
+                searchStats.style.display = 'block';
+            } else {
+                searchStats.style.display = 'none';
             }
         }
 
-        function hideTooltip() {
-            tooltipTimer = setTimeout(() => {
-                tooltip.classList.remove('show');
-                currentTooltipElement = null;
-            }, 100); // Small delay to allow moving to tooltip
+        // Show/hide no results message
+        function showSearchNoResults(show) {
+            searchNoResults.style.display = show ? 'block' : 'none';
         }
 
-        function cancelHideTooltip() {
-            if (tooltipTimer) {
-                clearTimeout(tooltipTimer);
-                tooltipTimer = null;
-            }
+        // Show search error
+        function showSearchError(message) {
+            searchResults.innerHTML = `
+                <div style="padding: 20px; text-align: center; color: #e53e3e;">
+                    <strong>❌ Search Error</strong><br>
+                    ${message}
+                </div>
+            `;
+            searchResults.style.display = 'block';
+            showSearchStats(false);
         }
 
-        function forceHideTooltip() {
-            cancelHideTooltip();
-            tooltip.classList.remove('show');
-            currentTooltipElement = null;
+        // Hide all search results
+        function hideSearchResults() {
+            searchResults.style.display = 'none';
+            searchNoResults.style.display = 'none';
+            searchStats.style.display = 'none';
+            currentSearchQuery = '';
         }
-
-        // Show tooltip on mouseover
-        document.addEventListener('mouseover', function(e) {
-            const element = e.target;
-            if (element.getAttribute('data-tooltip')) {
-                cancelHideTooltip();
-                showTooltip(element);
-            }
-        });
-
-        // Hide tooltip on mouseout (with delay)
-        document.addEventListener('mouseout', function(e) {
-            const element = e.target;
-            if (element.getAttribute('data-tooltip')) {
-                hideTooltip();
-            }
-        });
-
-        // Keep tooltip visible when hovering over it
-        tooltip.addEventListener('mouseenter', function() {
-            cancelHideTooltip();
-        });
-
-        // Hide tooltip when leaving the tooltip itself
-        tooltip.addEventListener('mouseleave', function() {
-            hideTooltip();
-        });
-
-        // Allow text selection in tooltip
-        tooltip.addEventListener('mousedown', function(e) {
-            e.stopPropagation();
-        });
-
-        // Close tooltip with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && tooltip.classList.contains('show')) {
-                forceHideTooltip();
-            }
-            if (e.key === 'Escape' && document.getElementById('projectDetailsModal').style.display === 'block') {
-                closeProjectDetails();
-            }
-        });
-
-        // Project Details Modal Functions
-        function showProjectDetails() {
-            document.getElementById('projectDetailsModal').style.display = 'block';
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        }
-
-        function closeProjectDetails() {
-            document.getElementById('projectDetailsModal').style.display = 'none';
-            document.body.style.overflow = 'auto'; // Restore scrolling
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('projectDetailsModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeProjectDetails();
-            }
-        });
 
         // Form functionality
         userForm.addEventListener('submit', async function(e) {
@@ -1241,14 +849,22 @@ function showHtmlSource() {
 
             formData.append('name', userName);
             formData.append('email', userEmail);
-            formData.append('phone', userPhone);
-
-            try {
+            formData.append('phone', userPhone);            try {
                 showLoading(true);
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: formData
-                });
+                let response;
+                try {
+                    response = await fetch(API_URL, {
+                        method: 'POST',
+                        body: formData
+                    });
+                } catch (httpsError) {
+                    console.log('HTTPS failed for form submission, trying HTTP...');
+                    const httpUrl = API_URL.replace('https://', 'http://');
+                    response = await fetch(httpUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+                }
 
                 const result = await response.json();
 
@@ -1256,7 +872,7 @@ function showHtmlSource() {
                     showMessage(result.message, 'success');
                     userForm.reset();
                     document.getElementById('userId').value = '';
-                    document.getElementById('submitBtn').textContent = '💾 Save User';
+                    document.getElementById('submitBtn').textContent = 'Save User';
                     document.getElementById('cancelBtn').style.display = 'none';
                     loadUsers();
                 } else {
@@ -1264,110 +880,42 @@ function showHtmlSource() {
                 }
             } catch (error) {
                 console.error('Connection error:', error);
-                showMessage('Server connection error. Please check API URL.', 'error');
+                showMessage('Server connection error. Please check API URL: ' + error.message, 'error');
             } finally {
                 showLoading(false);
             }
-        });
-
-        // Load users
+        });        // Load users
         async function loadUsers() {
             try {
                 showLoading(true);
-                console.log('Attempting to connect to API:', API_URL + '?action=read');
                 
-                const response = await fetch(API_URL + '?action=read');
-                console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
+                let response;
+                try {
+                    response = await fetch(API_URL + '?action=read');
+                } catch (httpsError) {
+                    console.log('HTTPS failed for load users, trying HTTP...');
+                    const httpUrl = API_URL.replace('https://', 'http://');
+                    response = await fetch(httpUrl + '?action=read');
+                }
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 const result = await response.json();
-                console.log('API Response:', result);
 
                 if (result.success) {
-                    displayUsers(result.users || result.data?.users || []);
-                    showMessage('Data loaded successfully from server', 'success');
+                    displayUsers(result.data?.users || result.users || []);
+                    showMessage('Data loaded successfully', 'success');
                 } else {
                     showMessage('Error loading data: ' + result.message, 'error');
-                    console.error('API returned error:', result);
                 }
             } catch (error) {
-                console.error('Detailed error loading users:', error);
-                console.error('Error type:', error.name);
-                console.error('Error message:', error.message);
-                
-                // Test if API is reachable at all
-                testApiConnection();
-                
-                showMessage(`Connection failed: ${error.message}. Showing demo data...`, 'error');
-                
-                // Show demo data when no connection
-                displayUsers([
-                    {
-                        id: 1,
-                        name: 'John Doe',
-                        email: 'john@example.com',
-                        phone: '1234567890',
-                        created_at: '2024-01-15 10:30:00'
-                    },
-                    {
-                        id: 2,
-                        name: 'Jane Smith',
-                        email: 'jane@example.com',
-                        phone: '0987654321',
-                        created_at: '2024-01-16 14:20:00'
-                    }
-                ]);
+                console.error('Error loading users:', error);
+                showMessage('Connection failed: ' + error.message, 'error');
+                displayUsers([]);
             } finally {
                 showLoading(false);
-            }
-        }
-
-        // Test API connection with fallback
-        async function testApiConnection() {
-            showLoading(true);
-            console.log('Testing API connection...');
-            showMessage('Testing API connection...', 'success');
-            
-            // Try HTTPS first
-            let success = await tryConnection('https://glconnectionbuilder1.com/api.php');
-            
-            // If HTTPS fails, try HTTP
-            if (!success) {
-                console.log('HTTPS failed, trying HTTP...');
-                showMessage('HTTPS failed, trying HTTP...', 'success');
-                success = await tryConnection('http://glconnectionbuilder1.com/api.php');
-            }
-            
-            showLoading(false);
-        }
-        
-        async function tryConnection(url) {
-            try {
-                console.log(`Trying connection to: ${url}`);
-                const response = await fetch(url);
-                console.log(`Response status: ${response.status}`);
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log('Response:', result);
-                    showMessage(`✅ API Connected via ${url}! Status: ${result.message || 'OK'}`, 'success');
-                    
-                    // Update the global API_URL if this works
-                    window.API_URL = url;
-                    return true;
-                } else {
-                    console.error(`Failed with status: ${response.status}`);
-                    showMessage(`❌ ${url} returned HTTP ${response.status}`, 'error');
-                    return false;
-                }
-            } catch (error) {
-                console.error(`Connection to ${url} failed:`, error);
-                showMessage(`❌ ${url} failed: ${error.message}`, 'error');
-                return false;
             }
         }
 
@@ -1389,63 +937,17 @@ function showHtmlSource() {
             users.forEach(user => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td data-tooltip="User ID in database">${user.id}</td>
-                    <td data-tooltip="Stored user name">${user.name}</td>
-                    <td data-tooltip="Unique email address">${user.email}</td>
-                    <td data-tooltip="Phone number">${user.phone}</td>
-                    <td data-tooltip="User creation date">${user.created_at}</td>
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phone}</td>
+                    <td>${user.created_at}</td>
                     <td class="action-buttons">
-                        <button class="btn" onclick="editUser(${user.id}, '${user.name}', '${user.email}', '${user.phone}')" 
-                                data-tooltip="Edit button executes editUser() function:
-
-function editUser(id, name, email, phone) {
-    document.getElementById('userId').value = id;
-    document.getElementById('userName').value = name;
-    document.getElementById('userEmail').value = email;
-    document.getElementById('userPhone').value = phone;
-    document.getElementById('submitBtn').textContent = '💾 Update User';
-    document.getElementById('cancelBtn').style.display = 'inline-block';
-    
-    // Scroll to form
-    document.getElementById('userForm').scrollIntoView({ behavior: 'smooth' });
-}">
-                            ✏️ Edit
+                        <button class="btn" data-action="edit" data-id="${user.id}" data-name="${user.name}" data-email="${user.email}" data-phone="${user.phone}">
+                            Edit
                         </button>
-                        <button class="btn btn-danger" onclick="deleteUser(${user.id}, '${user.name}')" 
-                                data-tooltip="Delete button executes deleteUser() function:
-
-async function deleteUser(id, name) {
-    if (!confirm('Are you sure you want to delete user ' + name + '?')) {
-        return;
-    }
-
-    try {
-        showLoading(true);
-        const formData = new FormData();
-        formData.append('action', 'delete');
-        formData.append('id', id);
-
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            body: formData
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showMessage(result.message, 'success');
-            loadUsers();
-        } else {
-            showMessage(result.message, 'error');
-        }
-    } catch (error) {
-        console.error('Error deleting user:', error);
-        showMessage('Server connection error', 'error');
-    } finally {
-        showLoading(false);
-    }
-}">
-                            🗑️ Delete
+                        <button class="btn btn-danger" data-action="delete" data-id="${user.id}" data-name="${user.name}">
+                            Delete
                         </button>
                     </td>
                 `;
@@ -1459,7 +961,7 @@ async function deleteUser(id, name) {
             document.getElementById('userName').value = name;
             document.getElementById('userEmail').value = email;
             document.getElementById('userPhone').value = phone;
-            document.getElementById('submitBtn').textContent = '💾 Update User';
+            document.getElementById('submitBtn').textContent = 'Update User';
             document.getElementById('cancelBtn').style.display = 'inline-block';
             
             // Scroll to form
@@ -1470,38 +972,47 @@ async function deleteUser(id, name) {
         document.getElementById('cancelBtn').addEventListener('click', function() {
             userForm.reset();
             document.getElementById('userId').value = '';
-            document.getElementById('submitBtn').textContent = '💾 Save User';
+            document.getElementById('submitBtn').textContent = 'Save User';
             this.style.display = 'none';
-        });
-
-        // Delete user
+        });        // Delete user
         async function deleteUser(id, name) {
             if (!confirm(`Are you sure you want to delete user "${name}"?`)) {
-                return;
-            }
-
-            try {
+                return false;
+            }            try {
                 showLoading(true);
                 const formData = new FormData();
                 formData.append('action', 'delete');
                 formData.append('id', id);
 
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: formData
-                });
+                let response;
+                try {
+                    response = await fetch(API_URL, {
+                        method: 'POST',
+                        body: formData
+                    });
+                } catch (httpsError) {
+                    console.log('HTTPS failed for delete, trying HTTP...');
+                    const httpUrl = API_URL.replace('https://', 'http://');
+                    response = await fetch(httpUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+                }
 
                 const result = await response.json();
 
                 if (result.success) {
                     showMessage(result.message, 'success');
                     loadUsers();
+                    return true;
                 } else {
                     showMessage(result.message, 'error');
+                    return false;
                 }
             } catch (error) {
                 console.error('Error deleting user:', error);
-                showMessage('Server connection error', 'error');
+                showMessage('Server connection error: ' + error.message, 'error');
+                return false;
             } finally {
                 showLoading(false);
             }
@@ -1516,618 +1027,45 @@ async function deleteUser(id, name) {
             setTimeout(() => {
                 statusMessage.style.display = 'none';
             }, 5000);
-        }
-
-        // Show loading
+        }        // Show loading
         function showLoading(show) {
             loading.style.display = show ? 'block' : 'none';
         }
 
-        // Show API source - fetch complete code from server
-        async function showApiSource() {
-            try {
-                showLoading(true);
-                document.getElementById('apiSourceCode').textContent = 'Loading API source code...';
-                document.getElementById('apiModal').style.display = 'block';
+        // Event delegation for table and search result buttons
+        document.addEventListener('click', function(e) {
+            const action = e.target.getAttribute('data-action');
+            
+            if (action === 'edit' || action === 'edit-search') {
+                const id = e.target.getAttribute('data-id');
+                const name = e.target.getAttribute('data-name');
+                const email = e.target.getAttribute('data-email');
+                const phone = e.target.getAttribute('data-phone');
                 
-                // Try to fetch the actual api.php file content
-                let apiContent = '';
-                try {
-                    const response = await fetch('api.php?action=get_api_source');
-                    if (response.ok) {
-                        const result = await response.json();
-                        if (result.success && result.source) {
-                            apiContent = result.source;
-                        } else {
-                            throw new Error('Source not available from server');
-                        }
-                    } else {
-                        throw new Error('Cannot fetch from server');
-                    }
-                } catch (fetchError) {
-                    console.log('Fallback to embedded source code');
-                    // Fallback to the complete embedded source
-                    apiContent = getCompleteApiSource();
-                }
-                
-                document.getElementById('apiSourceCode').textContent = apiContent;
-            } catch (error) {
-                console.error('Error showing API source:', error);
-                document.getElementById('apiSourceCode').textContent = 'Error loading API source code. Please check console for details.';
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // Complete API source code (fallback)
-        function getCompleteApiSource() {
-            return `<?php
-/**
- * User Management System - API Backend
- * Demo project for Genetic Invent Company
- * 
- * This file provides API for handling CRUD operations on users
- * Runs on Hostinger server with MySQL database
- */
-
-// Database configuration - Hostinger
-const DB_HOST = 'localhost';
-const DB_NAME = 'u419999707_Demo';
-const DB_USER = 'u419999707_NaifDemo';
-const DB_PASS = 'P@master5007';
-const DB_PORT = 3306;
-
-// Enable error reporting for development (should be disabled in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// CORS settings to allow requests from any origin (for demo purposes)
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Origin');
-header('Access-Control-Allow-Credentials: false');
-header('Content-Type: application/json; charset=utf-8');
-
-// Additional headers for better compatibility
-header('Vary: Origin');
-header('Cache-Control: no-cache, must-revalidate');
-
-// Handle OPTIONS requests (preflight requests)
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
-/**
- * Function to log errors and operations
- */
-function logMessage($message, $type = 'INFO') {
-    $timestamp = date('Y-m-d H:i:s');
-    $logEntry = "[$timestamp] [$type] $message" . PHP_EOL;
-    
-    // Can save logs to file if needed
-    // file_put_contents('api_log.txt', $logEntry, FILE_APPEND);
-    
-    // For development: display in console
-    if ($type == 'ERROR') {
-        error_log($logEntry);
-    }
-}
-
-/**
- * Function to validate email
- */
-function validateEmail($email) {
-    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
-}
-
-/**
- * Function to validate phone number
- */
-function validatePhone($phone) {
-    // Simple pattern for phone number validation
-    return preg_match('/^[0-9+\\-\\s()]{10,20}$/', $phone);
-}
-
-/**
- * Function to send JSON response
- */
-function sendResponse($success, $message, $data = null, $httpCode = 200) {
-    http_response_code($httpCode);
-    
-    $response = [
-        'success' => $success,
-        'message' => $message,
-        'timestamp' => date('Y-m-d H:i:s')
-    ];
-    
-    if ($data !== null) {
-        $response['data'] = $data;
-    }
-    
-    echo json_encode($response, JSON_UNESCAPED_UNICODE);
-    exit();
-}
-
-try {
-    // Log request start
-    logMessage("API Request: " . $_SERVER['REQUEST_METHOD'] . " " . $_SERVER['REQUEST_URI']);
-    
-    // Database connection with better error handling
-    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";port=" . DB_PORT . ";charset=utf8mb4";
-    $options = [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
-    ];
-    
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
-    logMessage("Database connection established successfully");
-    
-    // Test the connection
-    $pdo->query("SELECT 1");
-    logMessage("Database test query successful");
-
-    // Create users table if it doesn't exist
-    $createTableQuery = "
-        CREATE TABLE IF NOT EXISTS users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(100) NOT NULL,
-            email VARCHAR(100) NOT NULL UNIQUE,
-            phone VARCHAR(20) NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            INDEX idx_email (email),
-            INDEX idx_created_at (created_at)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-    ";
-    
-    $pdo->exec($createTableQuery);
-    logMessage("Users table checked/created successfully");
-
-    // Determine required action
-    $action = $_POST['action'] ?? $_GET['action'] ?? '';
-    logMessage("Action requested: " . $action);
-
-    switch ($action) {
-        case 'create':
-            // === Create new user ===
-            logMessage("Processing CREATE user request");
-            
-            $name = trim($_POST['name'] ?? '');
-            $email = trim($_POST['email'] ?? '');
-            $phone = trim($_POST['phone'] ?? '');
-
-            // Validate required data
-            if (empty($name)) {
-                sendResponse(false, 'Username is required', null, 400);
-            }
-            
-            if (empty($email)) {
-                sendResponse(false, 'Email is required', null, 400);
-            }
-            
-            if (empty($phone)) {
-                sendResponse(false, 'Phone number is required', null, 400);
-            }
-
-            // Validate data format
-            if (!validateEmail($email)) {
-                sendResponse(false, 'Invalid email format', null, 400);
-            }
-
-            if (!validatePhone($phone)) {
-                sendResponse(false, 'Invalid phone number format', null, 400);
-            }
-
-            // Validate data length
-            if (strlen($name) > 100) {
-                sendResponse(false, 'Name too long (maximum 100 characters)', null, 400);
-            }
-
-            if (strlen($email) > 100) {
-                sendResponse(false, 'Email too long (maximum 100 characters)', null, 400);
-            }
-
-            // Check for duplicate email
-            $checkStmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-            $checkStmt->execute([$email]);
-            if ($checkStmt->fetch()) {
-                sendResponse(false, 'Email already exists', null, 409);
-            }
-
-            // Insert new user
-            $stmt = $pdo->prepare("INSERT INTO users (name, email, phone) VALUES (?, ?, ?)");
-            $stmt->execute([$name, $email, $phone]);
-            
-            $userId = $pdo->lastInsertId();
-            logMessage("User created successfully with ID: " . $userId);
-
-            sendResponse(true, 'User created successfully', [
-                'user_id' => $userId,
-                'name' => $name,
-                'email' => $email
-            ]);
-            break;
-
-        case 'read':
-            // === Read all users ===
-            logMessage("Processing READ users request");
-            
-            // Add search and pagination capability
-            $search = $_GET['search'] ?? '';
-            $page = max(1, (int)($_GET['page'] ?? 1));
-            $limit = min(100, max(1, (int)($_GET['limit'] ?? 50))); // Maximum 100
-            $offset = ($page - 1) * $limit;
-
-            // Build query with search
-            $whereClause = '';
-            $params = [];
-            
-            if (!empty($search)) {
-                $whereClause = 'WHERE name LIKE ? OR email LIKE ? OR phone LIKE ?';
-                $searchParam = '%' . $search . '%';
-                $params = [$searchParam, $searchParam, $searchParam];
-            }
-
-            // Get total count
-            $countQuery = "SELECT COUNT(*) as total FROM users $whereClause";
-            $countStmt = $pdo->prepare($countQuery);
-            $countStmt->execute($params);
-            $totalCount = $countStmt->fetch()['total'];
-
-            // Get users with pagination
-            $query = "SELECT * FROM users $whereClause ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
-            $stmt = $pdo->prepare($query);
-            $stmt->execute($params);
-            $users = $stmt->fetchAll();
-
-            logMessage("Retrieved " . count($users) . " users (page $page, total: $totalCount)");
-
-            sendResponse(true, 'Users retrieved successfully', [
-                'users' => $users,
-                'pagination' => [
-                    'page' => $page,
-                    'limit' => $limit,
-                    'total' => $totalCount,
-                    'pages' => ceil($totalCount / $limit)
-                ]
-            ]);
-            break;
-
-        case 'update':
-            // === Update user ===
-            logMessage("Processing UPDATE user request");
-            
-            $id = $_POST['id'] ?? '';
-            $name = trim($_POST['name'] ?? '');
-            $email = trim($_POST['email'] ?? '');
-            $phone = trim($_POST['phone'] ?? '');
-
-            // Validate required data
-            if (empty($id)) {
-                sendResponse(false, 'User ID is required', null, 400);
-            }
-            
-            if (empty($name)) {
-                sendResponse(false, 'Username is required', null, 400);
-            }
-            
-            if (empty($email)) {
-                sendResponse(false, 'Email is required', null, 400);
-            }
-            
-            if (empty($phone)) {
-                sendResponse(false, 'Phone number is required', null, 400);
-            }
-
-            // Validate data format
-            if (!validateEmail($email)) {
-                sendResponse(false, 'Invalid email format', null, 400);
-            }
-
-            if (!validatePhone($phone)) {
-                sendResponse(false, 'Invalid phone number format', null, 400);
-            }
-
-            // Check if user exists
-            $checkStmt = $pdo->prepare("SELECT id FROM users WHERE id = ?");
-            $checkStmt->execute([$id]);
-            if (!$checkStmt->fetch()) {
-                sendResponse(false, 'User not found', null, 404);
-            }
-
-            // Check for duplicate email (excluding current user)
-            $duplicateStmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
-            $duplicateStmt->execute([$email, $id]);
-            if ($duplicateStmt->fetch()) {
-                sendResponse(false, 'Email already exists for another user', null, 409);
-            }
-
-            // Update user
-            $stmt = $pdo->prepare("UPDATE users SET name=?, email=?, phone=? WHERE id=?");
-            $stmt->execute([$name, $email, $phone, $id]);
-
-            logMessage("User updated successfully: ID $id");
-
-            sendResponse(true, 'User updated successfully', [
-                'user_id' => $id,
-                'name' => $name,
-                'email' => $email
-            ]);
-            break;
-
-        case 'delete':
-            // === Delete user ===
-            logMessage("Processing DELETE user request");
-            
-            $id = $_POST['id'] ?? $_GET['id'] ?? '';
-            
-            if (empty($id)) {
-                sendResponse(false, 'User ID is required', null, 400);
-            }
-
-            // Check if user exists
-            $checkStmt = $pdo->prepare("SELECT name FROM users WHERE id = ?");
-            $checkStmt->execute([$id]);
-            $user = $checkStmt->fetch();
-            
-            if (!$user) {
-                sendResponse(false, 'User not found', null, 404);
-            }
-
-            // Delete user
-            $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
-            $stmt->execute([$id]);
-
-            logMessage("User deleted successfully: " . $user['name'] . " (ID: $id)");
-
-            sendResponse(true, 'User deleted successfully', [
-                'deleted_user' => $user['name']
-            ]);
-            break;
-
-        case 'get_single':
-            // === Get single user ===
-            logMessage("Processing GET SINGLE user request");
-            
-            $id = $_GET['id'] ?? '';
-            
-            if (empty($id)) {
-                sendResponse(false, 'User ID is required', null, 400);
-            }
-
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-            $stmt->execute([$id]);
-            $user = $stmt->fetch();
-
-            if (!$user) {
-                sendResponse(false, 'User not found', null, 404);
-            }
-
-            logMessage("Single user retrieved: " . $user['name']);
-
-            sendResponse(true, 'User retrieved successfully', [
-                'user' => $user
-            ]);
-            break;
-
-        case 'stats':
-            // === Get database statistics ===
-            logMessage("Processing STATS request");
-            
-            $stmt = $pdo->query("SELECT COUNT(*) as total_users FROM users");
-            $totalUsers = $stmt->fetch()['total_users'];
-
-            $stmt = $pdo->query("SELECT COUNT(*) as users_today FROM users WHERE DATE(created_at) = CURDATE()");
-            $usersToday = $stmt->fetch()['users_today'];
-
-            $stmt = $pdo->query("SELECT COUNT(*) as users_this_week FROM users WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)");
-            $usersThisWeek = $stmt->fetch()['users_this_week'];
-
-            sendResponse(true, 'Statistics retrieved successfully', [
-                'total_users' => $totalUsers,
-                'users_today' => $usersToday,
-                'users_this_week' => $usersThisWeek,
-                'server_time' => date('Y-m-d H:i:s')
-            ]);
-            break;
-
-        case 'get_api_source':
-            // === Return API source code ===
-            logMessage("Processing GET API SOURCE request");
-            
-            try {
-                $sourceCode = file_get_contents(__FILE__);
-                sendResponse(true, 'API source code retrieved', [
-                    'source' => $sourceCode,
-                    'file_size' => strlen($sourceCode),
-                    'lines' => substr_count($sourceCode, "\\n") + 1
-                ]);
-            } catch (Exception $e) {
-                sendResponse(false, 'Cannot read source file: ' . $e->getMessage(), null, 500);
-            }
-            break;
-
-        case 'test_connection':
-            // === Test database connection ===
-            logMessage("Processing TEST CONNECTION request");
-            
-            try {
-                $stmt = $pdo->query("SELECT COUNT(*) as user_count FROM users");
-                $userCount = $stmt->fetch()['user_count'];
-                
-                sendResponse(true, 'Database connection successful', [
-                    'database' => DB_NAME,
-                    'user_count' => $userCount,
-                    'server_time' => date('Y-m-d H:i:s'),
-                    'php_version' => PHP_VERSION
-                ]);
-            } catch (Exception $e) {
-                sendResponse(false, 'Database connection test failed: ' . $e->getMessage(), null, 500);
-            }
-            break;
-
-        case '':
-        default:
-            // === Default response - API documentation ===
-            logMessage("API Documentation request or unknown action: '$action'");
-            
-            $endpoints = [
-                'create' => 'POST - Create new user (requires: name, email, phone)',
-                'read' => 'GET - Get all users (optional: search, page, limit)',
-                'update' => 'POST - Update user (requires: id, name, email, phone)',
-                'delete' => 'POST/GET - Delete user (requires: id)',
-                'get_single' => 'GET - Get single user (requires: id)',
-                'stats' => 'GET - Get database statistics',
-                'get_api_source' => 'GET - Get API source code',
-                'test_connection' => 'GET - Test database connection'
-            ];
-
-            sendResponse(true, 'Genetic Invent User Management API', [
-                'version' => '2.0',
-                'database' => DB_NAME,
-                'endpoints' => $endpoints,
-                'usage' => 'Add ?action=endpoint_name to URL or include action in POST data',
-                'documentation' => 'Each endpoint returns JSON with success, message, and data fields'
-            ]);
-            break;
-    }
-
-} catch (PDOException $e) {
-    logMessage("Database error: " . $e->getMessage(), 'ERROR');
-    sendResponse(false, 'Database connection failed: ' . $e->getMessage(), null, 500);
-} catch (Exception $e) {
-    logMessage("General error: " . $e->getMessage(), 'ERROR');
-    sendResponse(false, 'Server error: ' . $e->getMessage(), null, 500);
-}
-?>`;
-        }
-
-        // Close API modal
-        function closeApiModal() {
-            document.getElementById('apiModal').style.display = 'none';
-        }
-
-        // Show HTML source
-        function showHtmlSource() {
-            try {
-                showLoading(true);
-                document.getElementById('htmlSourceCode').textContent = 'Loading HTML source code...';
-                document.getElementById('htmlModal').style.display = 'block';
-                
-                // Get the complete HTML source including DOCTYPE
-                const htmlSource = getCompleteHtmlSource();
-                document.getElementById('htmlSourceCode').textContent = htmlSource;
-            } catch (error) {
-                console.error('Error showing HTML source:', error);
-                document.getElementById('htmlSourceCode').textContent = 'Error loading HTML source code. Please check console for details.';
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // Get complete HTML source
-        function getCompleteHtmlSource() {
-            // Get the actual HTML including DOCTYPE and all content
-            const doctype = '<!DOCTYPE html>';
-            const htmlElement = document.documentElement.outerHTML;
-            
-            // Format the HTML nicely with proper indentation
-            const formattedHtml = formatHtml(doctype + '\\n' + htmlElement);
-            
-            return formattedHtml;
-        }
-
-        // Simple HTML formatter for better readability
-        function formatHtml(html) {
-            let formatted = '';
-            let indent = 0;
-            const lines = html.split('\\n');
-            
-            for (let line of lines) {
-                line = line.trim();
-                if (line.length === 0) continue;
-                
-                // Decrease indent for closing tags
-                if (line.startsWith('</')) {
-                    indent = Math.max(0, indent - 2);
-                }
-                
-                // Add indentation
-                formatted += ' '.repeat(indent) + line + '\\n';
-                
-                // Increase indent for opening tags (but not self-closing or already closed)
-                if (line.startsWith('<') && !line.startsWith('</') && !line.endsWith('/>') && !line.includes('</')) {
-                    // Check if it's not a self-closing tag
-                    const tagName = line.match(/<(\\w+)/);
-                    if (tagName) {
-                        const selfClosingTags = ['img', 'input', 'br', 'hr', 'meta', 'link', 'area', 'base', 'col', 'embed', 'source', 'track', 'wbr'];
-                        if (!selfClosingTags.includes(tagName[1].toLowerCase())) {
-                            indent += 2;
-                        }
-                    }
+                if (action === 'edit-search') {
+                    editUserFromSearch(id, name, email, phone);
+                } else {
+                    editUser(id, name, email, phone);
                 }
             }
             
-            return formatted;
-        }
-
-        // Close HTML modal
-        function closeHtmlModal() {
-            document.getElementById('htmlModal').style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const apiModal = document.getElementById('apiModal');
-            const htmlModal = document.getElementById('htmlModal');
-            const projectModal = document.getElementById('projectDetailsModal');
-            
-            if (event.target == apiModal) {
-                apiModal.style.display = 'none';
+            if (action === 'delete' || action === 'delete-search') {
+                const id = e.target.getAttribute('data-id');
+                const name = e.target.getAttribute('data-name');
+                
+                if (action === 'delete-search') {
+                    deleteUserFromSearch(id, name);
+                } else {
+                    deleteUser(id, name);
+                }
             }
-            if (event.target == htmlModal) {
-                htmlModal.style.display = 'none';
-            }
-            if (event.target == projectModal) {
-                closeProjectDetails();
-            }
-        }
+        });
 
         // Load data on startup
         document.addEventListener('DOMContentLoaded', function() {
             loadUsers();
-            
-            // Developer message
-            console.log(`
-🧬 Genetic Invent Project - User Management System
-
-📋 System Information:
-1. API URL: http://glconnectionbuilder1.com/api.php
-2. Database: u419999707_Demo (NaifDemo user)
-3. Backend should be configured on Hostinger
-
-🔧 Debugging Steps:
-1. Click "Test API" button in the interface
-2. Check browser console for detailed error messages
-3. Try these URLs directly in browser:
-   - http://glconnectionbuilder1.com/api.php
-   - http://glconnectionbuilder1.com/api.php?action=test_connection
-4. Look for CORS, network, or server errors
-
-🎯 Educational Purpose:
-- Hover over any element to see explanatory tooltip
-- Click "View API Code" button to see source code
-
-🐛 If you see "Server connection error":
-- The API server might be down
-- Database connection might be failing
-- CORS headers might be missing
-- Check the Network tab in Developer Tools
-            `);
+            initializeSearch();
         });
     </script>
 </body>
-</html> 
+</html>
