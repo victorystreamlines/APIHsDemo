@@ -387,6 +387,233 @@ try {
             ]);
             break;
 
+        case 'search':
+            // === Live search users ===
+            logMessage("Processing SEARCH users request");
+            
+            $query = trim($_GET['q'] ?? $_POST['q'] ?? '');
+            $limit = min(20, max(1, (int)($_GET['limit'] ?? 10))); // Limit for live search
+            
+            if (empty($query) || strlen($query) < 2) {
+                sendResponse(true, 'Search query too short', ['users' => []]);
+            }
+            
+            // Enhanced search query - search in name, email, and phone
+            $searchTerm = "%$query%";
+            $stmt = $pdo->prepare("
+                SELECT id, name, email, phone, 
+                       DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at,
+                       CASE 
+                           WHEN name LIKE ? THEN 1
+                           WHEN email LIKE ? THEN 2
+                           WHEN phone LIKE ? THEN 3
+                           ELSE 4
+                       END as relevance
+                FROM users 
+                WHERE name LIKE ? OR email LIKE ? OR phone LIKE ?
+                ORDER BY relevance ASC, name ASC
+                LIMIT ?
+            ");
+            
+            $stmt->execute([$searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $limit]);
+            $users = $stmt->fetchAll();
+            
+            // Count total matches
+            $countStmt = $pdo->prepare("
+                SELECT COUNT(*) as total 
+                FROM users 
+                WHERE name LIKE ? OR email LIKE ? OR phone LIKE ?
+            ");
+            $countStmt->execute([$searchTerm, $searchTerm, $searchTerm]);
+            $totalMatches = $countStmt->fetch()['total'];
+            
+            logMessage("Search completed. Query: '$query', Results: " . count($users) . "/$totalMatches");
+            
+            sendResponse(true, 'Search completed successfully', [
+                'users' => $users,
+                'query' => $query,
+                'total_matches' => $totalMatches,
+                'showing' => count($users)
+            ]);
+            break;
+
+        case 'populate_test':
+            // === Simple populate test ===
+            logMessage("Processing POPULATE TEST request");
+            
+            try {
+                // Test adding just one simple user
+                $testName = "Test User " . rand(1, 9999);
+                $testEmail = "test" . rand(1, 9999) . "@test.com";
+                $testPhone = "(555) 123-" . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+                
+                $insertStmt = $pdo->prepare("INSERT INTO users (name, email, phone) VALUES (?, ?, ?)");
+                $insertStmt->execute([$testName, $testEmail, $testPhone]);
+                
+                $userId = $pdo->lastInsertId();
+                
+                sendResponse(true, "Test populate successful!", [
+                    'test_user' => [
+                        'id' => $userId,
+                        'name' => $testName,
+                        'email' => $testEmail,
+                        'phone' => $testPhone
+                    ]
+                ]);
+            } catch (Exception $e) {
+                logMessage("Test populate error: " . $e->getMessage(), 'ERROR');
+                sendResponse(false, "Test populate failed: " . $e->getMessage(), [
+                    'error_details' => $e->getTrace()
+                ], 500);
+            }
+            break;
+
+        case 'populate':
+            // === Populate database with realistic test data ===
+            logMessage("Processing POPULATE DATABASE request");
+            
+            // Realistic user data arrays
+            $firstNames = [
+                'James', 'John', 'Robert', 'Michael', 'William', 'David', 'Richard', 'Joseph', 'Thomas', 'Christopher',
+                'Charles', 'Daniel', 'Matthew', 'Anthony', 'Mark', 'Donald', 'Steven', 'Paul', 'Andrew', 'Kenneth',
+                'Brian', 'Kevin', 'George', 'Edward', 'Ronald', 'Timothy', 'Jason', 'Jeffrey', 'Ryan', 'Jacob',
+                'Mary', 'Patricia', 'Jennifer', 'Linda', 'Elizabeth', 'Barbara', 'Susan', 'Jessica', 'Sarah', 'Karen',
+                'Nancy', 'Lisa', 'Betty', 'Helen', 'Sandra', 'Donna', 'Carol', 'Ruth', 'Sharon', 'Michelle',
+                'Laura', 'Kimberly', 'Deborah', 'Dorothy', 'Emma', 'Olivia', 'Ava', 'Isabella', 'Sophia', 'Charlotte',
+                'Mia', 'Amelia', 'Harper', 'Evelyn', 'Liam', 'Noah', 'Oliver', 'Elijah', 'Benjamin', 'Lucas'
+            ];
+
+            $lastNames = [
+                'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
+                'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin',
+                'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson',
+                'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores',
+                'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts',
+                'Gomez', 'Phillips', 'Evans', 'Turner', 'Diaz', 'Parker', 'Cruz', 'Edwards', 'Collins', 'Reyes'
+            ];
+
+            $emailDomains = [
+                'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com',
+                'company.com', 'business.org', 'work.net', 'email.com', 'mail.com', 'live.com'
+            ];
+
+            $areaCodes = [
+                '212', '646', '718', '310', '323', '424', '312', '773', '872', '713', '281', '832',
+                '215', '267', '445', '602', '623', '480', '210', '726', '830', '619', '858', '760',
+                '214', '469', '972', '408', '669', '650', '512', '737', '904', '386', '415', '628'
+            ];
+
+            try {
+                // Check current user count
+                $countStmt = $pdo->query("SELECT COUNT(*) as count FROM users");
+                $currentCount = $countStmt->fetch()['count'];
+
+                // Prepare insert statement
+                $insertStmt = $pdo->prepare("INSERT INTO users (name, email, phone) VALUES (?, ?, ?)");
+                
+                $successCount = 0;
+                $duplicateCount = 0;
+                $errorCount = 0;
+                $addedUsers = [];
+                
+                logMessage("Starting to add 100 realistic users. Current count: $currentCount");
+                
+                // Generate and insert 100 users
+                for ($i = 1; $i <= 100; $i++) {
+                    try {
+                        // Generate realistic user
+                        $firstName = $firstNames[array_rand($firstNames)];
+                        $lastName = $lastNames[array_rand($lastNames)];
+                        
+                        // Generate realistic email variations
+                        $emailVariations = [
+                            strtolower($firstName . '.' . $lastName),
+                            strtolower($firstName . $lastName),
+                            strtolower($firstName[0] . $lastName),
+                            strtolower($firstName . '.' . $lastName . rand(1, 99)),
+                            strtolower($firstName . $lastName . rand(1, 999)),
+                            strtolower($firstName . '_' . $lastName),
+                            strtolower($firstName . rand(1, 9999))
+                        ];
+                        
+                        $emailPrefix = $emailVariations[array_rand($emailVariations)];
+                        $domain = $emailDomains[array_rand($emailDomains)];
+                        $email = $emailPrefix . '@' . $domain;
+                        
+                        // Generate realistic phone number
+                        $areaCode = $areaCodes[array_rand($areaCodes)];
+                        $exchange = str_pad(rand(200, 999), 3, '0', STR_PAD_LEFT);
+                        $number = str_pad(rand(1000, 9999), 4, '0', STR_PAD_LEFT);
+                        $phone = "({$areaCode}) {$exchange}-{$number}";
+                        
+                        $name = $firstName . ' ' . $lastName;
+                        
+                        $insertStmt->execute([$name, $email, $phone]);
+                        
+                        $successCount++;
+                        $addedUsers[] = [
+                            'name' => $name,
+                            'email' => $email,
+                            'phone' => $phone
+                        ];
+                        
+                        logMessage("Added user $i: $name ($email)");
+                        
+                    } catch (PDOException $e) {
+                        if ($e->getCode() == 23000) { // Duplicate entry
+                            $duplicateCount++;
+                            // Try again with a different variation
+                            $retryEmail = strtolower($firstName . '.' . $lastName . rand(1000, 9999)) . '@gmail.com';
+                            
+                            try {
+                                $insertStmt->execute([$name, $retryEmail, $phone]);
+                                $successCount++;
+                                $addedUsers[] = [
+                                    'name' => $name,
+                                    'email' => $retryEmail,
+                                    'phone' => $phone
+                                ];
+                                logMessage("Added user $i (retry): $name ($retryEmail)");
+                            } catch (Exception $retryError) {
+                                $errorCount++;
+                                logMessage("Error on retry for user $i: " . $retryError->getMessage(), 'ERROR');
+                            }
+                        } else {
+                            $errorCount++;
+                            logMessage("Error adding user $i: " . $e->getMessage(), 'ERROR');
+                        }
+                    } catch (Exception $e) {
+                        $errorCount++;
+                        logMessage("General error adding user $i: " . $e->getMessage(), 'ERROR');
+                    }
+                }
+                
+                // Final count
+                $finalCountStmt = $pdo->query("SELECT COUNT(*) as count FROM users");
+                $finalCount = $finalCountStmt->fetch()['count'];
+                
+                logMessage("Population completed. Added: $successCount, Duplicates: $duplicateCount, Errors: $errorCount");
+
+                sendResponse(true, "Successfully populated database with realistic users!", [
+                    'statistics' => [
+                        'added' => $successCount,
+                        'duplicates' => $duplicateCount,
+                        'errors' => $errorCount,
+                        'total_users' => $finalCount,
+                        'previous_count' => $currentCount,
+                        'net_increase' => $finalCount - $currentCount
+                    ],
+                    'sample_users' => array_slice($addedUsers, 0, 10)
+                ]);
+                
+            } catch (Exception $e) {
+                logMessage("Fatal error in populate: " . $e->getMessage(), 'ERROR');
+                sendResponse(false, "Population failed: " . $e->getMessage(), [
+                    'error_details' => $e->getTrace()
+                ], 500);
+            }
+            break;
+
         case 'get_api_source':
             // === Return API source code for frontend display ===
             logMessage("Processing GET API SOURCE request");
@@ -424,16 +651,21 @@ try {
                 'available_actions' => [
                     'create' => 'Create new user (POST)',
                     'read' => 'Get all users (GET)',
+                    'search' => 'Search users by name, email, or phone (GET)',
                     'update' => 'Update existing user (POST)',
                     'delete' => 'Delete user (POST/GET)',
                     'get_single' => 'Get single user by ID (GET)',
                     'stats' => 'Get system statistics (GET)',
+                    'populate_test' => 'Test populate with one user (GET)',
+                    'populate' => 'Add 100 realistic test users (GET)',
                     'test_connection' => 'Test API connection (GET)',
                     'get_api_source' => 'Get API source code (GET)'
                 ],
                 'examples' => [
                     'Test connection' => '?action=test_connection',
                     'Get all users' => '?action=read',
+                    'Search users' => '?action=search&q=john',
+                    'Add 100 test users' => '?action=populate',
                     'Get statistics' => '?action=stats'
                 ],
                 'status' => 'API is running successfully'
@@ -442,7 +674,7 @@ try {
 
         default:
             logMessage("Unknown action requested: " . $action, 'ERROR');
-            sendResponse(false, 'Unknown action. Available actions: create, read, update, delete, get_single, stats, get_api_source, test_connection', null, 400);
+            sendResponse(false, 'Unknown action. Available actions: create, read, search, update, delete, get_single, stats, populate_test, populate, get_api_source, test_connection', null, 400);
     }
 
 } catch (PDOException $e) {
